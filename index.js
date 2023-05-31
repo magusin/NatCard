@@ -74,10 +74,23 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
   
     async function main() {
-      await afficherCarte();
-      await distribuerCartes();
-      console.log(joueurs);
-    }
-  
-    await main();
-  });
+        await afficherCarte();
+        await distribuerCartes();
+        console.log(joueurs);
+    
+        // Affichage des tas de cartes des joueurs après distribution
+        for (let i = 0; i < joueurs.length; i++) {
+          const joueurDiv = document.createElement('div');
+          joueurDiv.classList.add('joueur');
+          joueurDiv.innerHTML = `Joueur ${i + 1}`;
+          for (let j = 0; j < joueurs[i].length; j++) {
+            const carteImg = document.createElement('img');
+            carteImg.src = `../assets/${joueurs[i][j].valeur}-de-${joueurs[i][j].couleur}.avif`;
+            joueurDiv.appendChild(carteImg);
+          }
+          document.body.appendChild(joueurDiv);
+        }
+      }
+    
+      await main();
+    });
