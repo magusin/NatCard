@@ -1,12 +1,12 @@
 document.addEventListener('DOMContentLoaded', async function () {
   // Création des joueurs
-  const joueurs = [[], [], [], []]
-  const joueursLabels = ['J1', 'J2', 'J3', 'J4'];
+  const players = [[], [], [], []]
+  const playersLabels = ['J1', 'J2', 'J3', 'J4']
 
-  const positions = ['top-left', 'top-right', 'bottom-right', 'bottom-left'];
+  const positions = ['top-left', 'top-right', 'bottom-right', 'bottom-left']
 
-  const couleurs = ['trèfle', 'pique', 'carreau', 'coeur']
-  const valeurs = [
+  const colors = ['trèfle', 'pique', 'carreau', 'coeur']
+  const values = [
     '2',
     '3',
     '4',
@@ -21,27 +21,27 @@ document.addEventListener('DOMContentLoaded', async function () {
     'Roi',
     'As'
   ]
-  const jeuDeCartes = []
+  const cardGames = []
   let jeuxComplet = document.querySelector('#jeuxComplet')
   let suivis = document.querySelector('.suivis')
 
-  for (let i = 0; i < couleurs.length; i++) {
-    for (let j = 0; j < valeurs.length; j++) {
-      const carte = {
-        valeur: valeurs[j],
-        couleur: couleurs[i]
+  for (let i = 0; i < colors.length; i++) {
+    for (let j = 0; j < values.length; j++) {
+      const card = {
+        value: values[j],
+        color: colors[i]
       }
-      jeuDeCartes.push(carte)
+      cardGames.push(card)
     }
   }
   // Afficher toutes les cartes en début de jeux
-  function afficherTotalCarte() {
+  function showAllCards() {
     return new Promise((resolve) => {
-      for (let i = 0; i < jeuDeCartes.length; i++) {
+      for (let i = 0; i < cardGames.length; i++) {
         setTimeout(() => {
-          const carte = `${jeuDeCartes[i].valeur}-de-${jeuDeCartes[i].couleur}`
-          jeuxComplet.innerHTML += `<img src="../assets/${carte}.avif" title="${carte}" alt="${carte}">`
-          if (i === jeuDeCartes.length - 1) {
+          const card = `${cardGames[i].value}-de-${cardGames[i].color}`
+          jeuxComplet.innerHTML += `<img src="../assets/${card}.avif" title="${card}" alt="${card}">`
+          if (i === cardGames.length - 1) {
             resolve()
           }
         }, 100 * (i + 1))
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   }
 
   // fonction pour mélanger les cartes
-  function melangerCartes(array) {
+  function shuffleCards(array) {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1))
       ;[array[i], array[j]] = [array[j], array[i]]
@@ -58,157 +58,205 @@ document.addEventListener('DOMContentLoaded', async function () {
     return array
   }
 
-  async function distribuerCartes() {
+  async function distributeCards() {
     // Appel de la fonction pour mélanger les cartes et stockage dans une constante
-    const jeuMelange = melangerCartes(jeuDeCartes)
+    const jeuMelange = shuffleCards(cardGames)
 
     // Distribution des cartes aux joueurs
     while (jeuMelange.length > 0) {
-      for (let i = 0; i < joueurs.length; i++) {
+      for (let i = 0; i < players.length; i++) {
         if (jeuMelange.length > 0) {
-          const carte = jeuMelange.pop()
-          joueurs[i].push(carte)
+          const card = jeuMelange.pop()
+          players[i].push(card)
         }
       }
     }
 
-    return joueurs
+    return players
   }
 
-async function cartejoueur(joueurs) {
-// Affichage des tas de cartes des joueurs
-for (let i = 0; i < joueurs.length; i++) {
-    const joueurDiv = document.createElement('div');
-    joueurDiv.classList.add('joueur');
-    
-    const joueurContent = document.createElement('div');
-    joueurContent.classList.add('joueur-content');
-    
-    // const joueurHeading = document.createElement('p');
-    // joueurHeading.textContent = `Joueur ${i + 1}`;
-    // joueurContent.appendChild(joueurHeading);
-    
-    const joueurCardsDiv = document.createElement('div');
-    joueurCardsDiv.classList.add('joueur-cards');
-    joueurCardsDiv.textContent = `Joueur ${i + 1}`;
-    for (let j = 0; j < joueurs[i].length; j++) {
-      const carteImg = document.createElement('img');
-      const cardAlt = `${joueurs[i][j].valeur}-de-${joueurs[i][j].couleur}`
-      carteImg.src = `../assets/${joueurs[i][j].valeur}-de-${joueurs[i][j].couleur}.avif`;
-      carteImg.alt = cardAlt;
-      carteImg.title = cardAlt;
-      joueurCardsDiv.appendChild(carteImg);
+  async function playerCards(players) {
+    // Affichage des tas de cartes des joueurs
+    for (let i = 0; i < players.length; i++) {
+      const playerDiv = document.createElement('div')
+      playerDiv.classList.add('joueur')
+
+      const joueurContent = document.createElement('div')
+      joueurContent.classList.add('joueur-content')
+
+      const joueurCardsDiv = document.createElement('div')
+      joueurCardsDiv.classList.add('joueur-cards')
+      joueurCardsDiv.textContent = `Joueur ${i + 1}`
+      for (let j = 0; j < players[i].length; j++) {
+        const cardImg = document.createElement('img')
+        const cardDesc = `${players[i][j].value}-de-${players[i][j].color}`
+        cardImg.src = `../assets/${cardDesc}.avif`
+        cardImg.alt = cardDesc
+        cardImg.title = cardDesc
+        joueurCardsDiv.appendChild(cardImg)
+      }
+
+      joueurContent.appendChild(joueurCardsDiv)
+      playerDiv.appendChild(joueurContent)
+
+      document.body.appendChild(playerDiv)
     }
-    
-    joueurContent.appendChild(joueurCardsDiv);
-    joueurDiv.appendChild(joueurContent);
-    
-    document.body.appendChild(joueurDiv);
   }
-}
-// tirer une carte aléatoire du jeux du joueur, enlever l'image de carte de la div du joueur et enlever l'objet carte du tableau du joueur
-async function tirerCarteAleatoire(joueurIndex) {
-  const joueur = joueurs[joueurIndex];
-  if (joueur.length === 0) {
-    // console.log(`Le joueur ${joueurIndex + 1} n'a plus de cartes.`);
+  // tirer une carte aléatoire du jeux du joueur, enlever l'image de carte de la div du joueur et enlever l'objet carte du tableau du joueur
+  async function drawRandomCards(joueurIndex) {
+    const player = players[joueurIndex]
+    if (player.length === 0) {
+      // console.log(`Le joueur ${joueurIndex + 1} n'a plus de cartes.`);
 
-    return null;
+      return null
+    }
+
+    const indexCarte = Math.floor(Math.random() * player.length)
+    const card = player.splice(indexCarte, 1)[0]
+
+    const playerDiv = document.querySelectorAll('.joueur')[joueurIndex]
+    const joueurCardsDiv = playerDiv.querySelector('.joueur-cards')
+
+    const cardImg = joueurCardsDiv.querySelector(
+      `img[title="${card.value}-de-${card.color}"]`
+    )
+    joueurCardsDiv.removeChild(cardImg)
+
+    const joueurXDiv = document.querySelector(`.Joueur${joueurIndex + 1}`)
+    const playerCardsX = document.createElement('img')
+    playerCardsX.src = `../assets/${card.value}-de-${card.color}.avif`
+    playerCardsX.alt = `${card.value}-de-${card.color}`
+    playerCardsX.title = `${card.value}-de-${card.color}`
+    joueurXDiv.insertBefore(playerCardsX, joueurXDiv.firstChild)
+    return card
   }
 
-  const indexCarte = Math.floor(Math.random() * joueur.length);
-  const carte = joueur.splice(indexCarte, 1)[0];
+  // fonction pour comparer deux cartes, si égalité nombre aléatoire pour déterminer le gagnant
+  async function versiusCards(carte1, carte2) {
+    if (carte1 === null) {
+      return carte2
+    } else if (carte2 === null) {
+      return carte1
+    }
+    const valeur1 = values.indexOf(carte1.value)
+    const valeur2 = values.indexOf(carte2.value)
 
-  const joueurDiv = document.querySelectorAll('.joueur')[joueurIndex];
-  const joueurCardsDiv = joueurDiv.querySelector('.joueur-cards');
+    if (valeur1 > valeur2) {
+      return carte1 // carte1 est supérieure à carte2
+    } else if (valeur1 < valeur2) {
+      return carte2 // carte1 est inférieure à carte2
+    } else {
+      // Égalité entre les deux cartes, tirer des nombres aléatoires jusqu'à la résolution
+      while (true) {
+        // On sait jamais si deux nombres aléatoires se retrouve égaux aussi :)
+        const random1 = Math.random()
+        const random2 = Math.random()
 
-  const carteImg = joueurCardsDiv.querySelector(`img[title="${carte.valeur}-de-${carte.couleur}"]`);
-  joueurCardsDiv.removeChild(carteImg);
-
-  const joueurXDiv = document.querySelector(`.Joueur${joueurIndex + 1}`);
-  const carteJoueurX = document.createElement('img');
-  carteJoueurX.src = `../assets/${carte.valeur}-de-${carte.couleur}.avif`;
-  carteJoueurX.alt = `${carte.valeur}-de-${carte.couleur}`;
-  carteJoueurX.title = `${carte.valeur}-de-${carte.couleur}`;
-  joueurXDiv.insertBefore(carteJoueurX, joueurXDiv.firstChild);
-  return carte;
-}
-
-// fonction pour comparer deux cartes, si égalité nombre aléatoire pour déterminer le gagnant
-async function comparerCartes(carte1, carte2) {
-  if (carte1 === null) {
-    return carte2;
-  } else if (carte2 === null) {
-    return carte1;
-  }
-  const valeur1 = valeurs.indexOf(carte1.valeur);
-  const valeur2 = valeurs.indexOf(carte2.valeur);
-
-  if (valeur1 > valeur2) {
-    return carte1; // carte1 est supérieure à carte2
-  } else if (valeur1 < valeur2) {
-    return carte2; // carte1 est inférieure à carte2
-  } else {
-    // Égalité entre les deux cartes, tirer des nombres aléatoires jusqu'à la résolution
-    while (true) {
-      const random1 = Math.random();
-      const random2 = Math.random();
-
-      if (random1 > random2) {
-        return carte1; // carte1 l'emporte
-      } else if (random1 < random2) {
-        return carte2; // carte2 l'emporte
+        if (random1 > random2) {
+          return carte1 // carte1 l'emporte
+        } else if (random1 < random2) {
+          return carte2 // carte2 l'emporte
+        }
       }
     }
   }
-}
+  // fonction qui prend en argument le joueur gagnant et les cartes de la manche, supprime les cartes des joueurs en jeux et les affiches dans la div du joueur gagnant
+  async function resultWinner(joueurGagnant, cartesManche) {
+    const joueurGagnantDiv = document.querySelectorAll('.joueur')[joueurGagnant]
+    const joueurCardsDiv = joueurGagnantDiv.querySelector('.joueur-cards')
 
-async function main() {
-    await afficherTotalCarte()
+    for (let i = 0; i < cartesManche.length; i++) {
+      console.log('carteManche',cartesManche.length)
+      const card = cartesManche[i]
+      if (card !== null) {
+        await new Promise((resolve) => setTimeout(resolve, 500))
+        const carteActuelleSelector = document.querySelector(`.Joueur${i + 1}`)
+        carteActuelleSelector.removeChild(carteActuelleSelector.firstChild)
+        const imageBack = carteActuelleSelector.querySelector('img')
+        await new Promise((resolve) => setTimeout(resolve, 500))
+        const cardImg = document.createElement('img')
+        const cardDescription = `${card.value}-de-${card.color}`
+        cardImg.src = `../assets/${cardDescription}.avif`
+        cardImg.alt = cardDescription
+        cardImg.title = cardDescription
+        joueurCardsDiv.appendChild(cardImg)
+        
+        // Ajouter les cartes gagnantes au tableau joueurs
+        
+        players[joueurGagnant] =  players[joueurGagnant].concat(
+          cartesManche[i]
+        )
+        
+        imageBack.title = `${players[i].length} ${
+          players[i].length === 1 ? 'Carte' : 'Cartes'
+        }`
+        console.log('joueur :', players)
+      }
+    }
+  }
+
+  async function main() {
+    await showAllCards()
     await new Promise((resolve) => setTimeout(resolve, 1000))
-    await distribuerCartes()
-    console.log(joueurs)
-    await cartejoueur(joueurs)
+    await distributeCards()
+    
+    await playerCards(players)
     // Cacher la div "jeuxComplet"
     jeuxComplet.style.display = 'none'
     // Changer le contenu de l'élément avec la classe "suivis"
     suivis.innerHTML = 'Cartes des joueurs'
 
-   // Ajout des labels des joueurs avec l'image de dos
-  const joueurLabelsDiv = document.createElement('div');
-  joueurLabelsDiv.classList.add('joueur-labels');
+    // Ajout des labels des joueurs avec l'image de dos
+    const joueurLabelsDiv = document.createElement('div')
+    joueurLabelsDiv.classList.add('joueur-labels')
 
-  for (let i = 0; i < joueursLabels.length; i++) {
-    const labelDiv = document.createElement('div');
-    labelDiv.classList.add(positions[i]);
-    labelDiv.classList.add(`Joueur${i +1}`);
+    for (let i = 0; i < playersLabels.length; i++) {
+      const labelDiv = document.createElement('div')
+      labelDiv.classList.add(positions[i])
+      labelDiv.classList.add(`Joueur${i + 1}`)
 
-    
-      const labelImg = document.createElement('img');
-      labelImg.src = '../assets/back.avif';
-      labelImg.alt = 'Back Image';
-      labelImg.title = `${joueurs[i].length} ${joueurs[i].lenght === 1 ? 'Carte' : 'Cartes'}`;
-      labelDiv.appendChild(labelImg);
-  
-      const labelText = document.createElement('span');
-      labelText.textContent = joueursLabels[i];
-      labelDiv.appendChild(labelText);
-     
+      const labelImg = document.createElement('img')
+      labelImg.src = '../assets/back.avif'
+      labelImg.alt = 'Back Image'
+      labelImg.title = `${players[i].length} ${
+        players[i].length === 1 ? 'Carte' : 'Cartes'
+      }`
+      labelDiv.appendChild(labelImg)
 
-    joueurLabelsDiv.appendChild(labelDiv);
-    document.body.appendChild(joueurLabelsDiv);
-  }
-  await new Promise((resolve) => setTimeout(resolve, 1000))
-  const carteJ1 = await tirerCarteAleatoire(0)
-  const carteJ2 = await tirerCarteAleatoire(1)
-  const carteJ3 = await tirerCarteAleatoire(2)
-  const carteJ4 = await tirerCarteAleatoire(3)
-  const gagnant1 = await comparerCartes(carteJ1, carteJ2)
-  const gagnant2 = await comparerCartes(gagnant1, carteJ3)
-  const gagantFinal = await comparerCartes(gagnant2, carteJ4)
-  console.log(gagantFinal)
+      const labelText = document.createElement('span')
+      labelText.textContent = playersLabels[i]
+      labelDiv.appendChild(labelText)
 
+      joueurLabelsDiv.appendChild(labelDiv)
+      document.body.appendChild(joueurLabelsDiv)
+      
+    }
+    const messageDiv = document.createElement('div')
+    document.body.appendChild(messageDiv)
+    // démarrer une manche
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+    const carteJ1 = await drawRandomCards(0)
+    const carteJ2 = await drawRandomCards(1)
+    const carteJ3 = await drawRandomCards(2)
+    const carteJ4 = await drawRandomCards(3)
+    const gagnant1 = await versiusCards(carteJ1, carteJ2)
+    const gagnant2 = await versiusCards(gagnant1, carteJ3)
+    const gagnantFinal = await versiusCards(gagnant2, carteJ4)
+    console.log(gagnantFinal)
+    const carteManche = [carteJ1, carteJ2, carteJ3, carteJ4]
+    let joueurGagnant
+    if (gagnantFinal === carteJ1) {
+      joueurGagnant = 1
+    } else if (gagnantFinal === carteJ2) {
+      joueurGagnant = 2
+    } else if (gagnantFinal === carteJ3) {
+      joueurGagnant = 3
+    } else if (gagnantFinal === carteJ4) {
+      joueurGagnant = 4
+    }
+    messageDiv.textContent = `Joueur${joueurGagnant} a gagné !`
+    await resultWinner(joueurGagnant - 1, carteManche)
   }
 
   await main()
 })
-
