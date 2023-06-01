@@ -110,8 +110,9 @@ for (let i = 0; i < joueurs.length; i++) {
 async function tirerCarteAleatoire(joueurIndex) {
   const joueur = joueurs[joueurIndex];
   if (joueur.length === 0) {
-    console.log(`Le joueur ${joueurIndex + 1} n'a plus de cartes.`);
-    return;
+    // console.log(`Le joueur ${joueurIndex + 1} n'a plus de cartes.`);
+
+    return null;
   }
 
   const indexCarte = Math.floor(Math.random() * joueur.length);
@@ -129,6 +130,36 @@ async function tirerCarteAleatoire(joueurIndex) {
   carteJoueurX.alt = `${carte.valeur}-de-${carte.couleur}`;
   carteJoueurX.title = `${carte.valeur}-de-${carte.couleur}`;
   joueurXDiv.insertBefore(carteJoueurX, joueurXDiv.firstChild);
+  return carte;
+}
+
+// fonction pour comparer deux cartes, si égalité nombre aléatoire pour déterminer le gagnant
+async function comparerCartes(carte1, carte2) {
+  if (carte1 === null) {
+    return carte2;
+  } else if (carte2 === null) {
+    return carte1;
+  }
+  const valeur1 = valeurs.indexOf(carte1.valeur);
+  const valeur2 = valeurs.indexOf(carte2.valeur);
+
+  if (valeur1 > valeur2) {
+    return carte1; // carte1 est supérieure à carte2
+  } else if (valeur1 < valeur2) {
+    return carte2; // carte1 est inférieure à carte2
+  } else {
+    // Égalité entre les deux cartes, tirer des nombres aléatoires jusqu'à la résolution
+    while (true) {
+      const random1 = Math.random();
+      const random2 = Math.random();
+
+      if (random1 > random2) {
+        return carte1; // carte1 l'emporte
+      } else if (random1 < random2) {
+        return carte2; // carte2 l'emporte
+      }
+    }
+  }
 }
 
 async function main() {
@@ -167,11 +198,14 @@ async function main() {
     document.body.appendChild(joueurLabelsDiv);
   }
   await new Promise((resolve) => setTimeout(resolve, 1000))
-  await tirerCarteAleatoire(0)
-  await tirerCarteAleatoire(1)
-  await tirerCarteAleatoire(2)
-  await tirerCarteAleatoire(3)
-
+  const carteJ1 = await tirerCarteAleatoire(0)
+  const carteJ2 = await tirerCarteAleatoire(1)
+  const carteJ3 = await tirerCarteAleatoire(2)
+  const carteJ4 = await tirerCarteAleatoire(3)
+  const gagnant1 = await comparerCartes(carteJ1, carteJ2)
+  const gagnant2 = await comparerCartes(gagnant1, carteJ3)
+  const gagantFinal = await comparerCartes(gagnant2, carteJ4)
+  console.log(gagantFinal)
 
   }
 
