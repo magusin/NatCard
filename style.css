@@ -35,29 +35,31 @@ img {
   }
   
   .joueur-labels div img {
-    width: 20px;
-    height: auto;
+    width: auto;
+    height: 10vh;
     margin-right: 5px;
   }
   
-  .joueur-labels div:nth-child(1) {
-    top: 0;
-    left: 0;
+  .joueur-labels .top-left {
+    top: 10px;
+    left: 10px;
   }
   
-  .joueur-labels div:nth-child(2) {
-    top: 0;
-    right: 0;
+  .joueur-labels .top-right {
+    top: 10px;
+    right: 10px;
+    
   }
   
-  .joueur-labels div:nth-child(3) {
-    bottom: 0;
-    right: 0;
+  .joueur-labels .bottom-right {
+    bottom: 10px;
+    right: 10px;
+    
   }
   
-  .joueur-labels div:nth-child(4) {
-    bottom: 0;
-    left: 0;
+  .joueur-labels .bottom-left {
+    bottom: 10px;
+    left: 10px;
   }
 
   .joueur-content {

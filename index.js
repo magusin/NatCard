@@ -1,6 +1,9 @@
 document.addEventListener('DOMContentLoaded', async function () {
   // Création des joueurs
   const joueurs = [[], [], [], []]
+  const joueursLabels = ['J1', 'J2', 'J3', 'J4'];
+
+  const positions = ['top-left', 'top-right', 'bottom-right', 'bottom-left'];
 
   const couleurs = ['trèfle', 'pique', 'carreau', 'coeur']
   const valeurs = [
@@ -114,23 +117,39 @@ async function main() {
     jeuxComplet.style.display = 'none'
     // Changer le contenu de l'élément avec la classe "suivis"
     suivis.innerHTML = 'Cartes des joueurs'
-  // Ajout de la div avec les étiquettes J1, J2, J3, J4 et l'image
-const joueurLabelsDiv = document.createElement('div');
-joueurLabelsDiv.classList.add('joueur-labels');
 
-const joueursLabels = ['J1', 'J2', 'J3', 'J4'];
-for (let i = 0; i < joueursLabels.length; i++) {
-  const labelDiv = document.createElement('div');
-  const labelImg = document.createElement('img');
-  
-  labelImg.src = '../assets/back.avif';
-  labelDiv.appendChild(labelImg);
-  labelDiv.textContent = joueursLabels[i];
-  
-  joueurLabelsDiv.appendChild(labelDiv);
-}
+   // Ajout des labels des joueurs avec l'image de dos
+  const joueurLabelsDiv = document.createElement('div');
+  joueurLabelsDiv.classList.add('joueur-labels');
 
-document.body.appendChild(joueurLabelsDiv);
+  for (let i = 0; i < joueursLabels.length; i++) {
+    const labelDiv = document.createElement('div');
+    labelDiv.classList.add(positions[i]);
+
+    if (i === 0 || i === 3) { 
+      const labelText = document.createElement('span');
+      labelText.textContent = joueursLabels[i];
+      labelDiv.appendChild(labelText);
+
+      const labelImg = document.createElement('img');
+    labelImg.src = '../assets/back.avif';
+    labelImg.alt = 'Back Image';
+    labelDiv.appendChild(labelImg);
+     } else {
+      const labelImg = document.createElement('img');
+      labelImg.src = '../assets/back.avif';
+      labelImg.alt = 'Back Image';
+      labelDiv.appendChild(labelImg);
+  
+      const labelText = document.createElement('span');
+      labelText.textContent = joueursLabels[i];
+      labelDiv.appendChild(labelText);
+     }
+
+    joueurLabelsDiv.appendChild(labelDiv);
+  }
+
+  document.body.appendChild(joueurLabelsDiv);
   }
 
   await main()
