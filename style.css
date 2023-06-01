@@ -43,6 +43,7 @@ img {
   .joueur-labels .top-left {
     top: 10px;
     left: 10px;
+    flex-direction: row-reverse;
   }
   
   .joueur-labels .top-right {
@@ -54,17 +55,16 @@ img {
   .joueur-labels .bottom-right {
     bottom: 10px;
     right: 10px;
-    
   }
   
   .joueur-labels .bottom-left {
     bottom: 10px;
     left: 10px;
+    flex-direction: row-reverse;
   }
 
   .joueur-content {
-    display: flex;
-    
+    display: flex; 
     align-items: center;
   }
   

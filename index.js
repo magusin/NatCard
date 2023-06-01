@@ -106,6 +106,30 @@ for (let i = 0; i < joueurs.length; i++) {
     document.body.appendChild(joueurDiv);
   }
 }
+// tirer une carte aléatoire du jeux du joueur, enlever l'image de carte de la div du joueur et enlever l'objet carte du tableau du joueur
+async function tirerCarteAleatoire(joueurIndex) {
+  const joueur = joueurs[joueurIndex];
+  if (joueur.length === 0) {
+    console.log(`Le joueur ${joueurIndex + 1} n'a plus de cartes.`);
+    return;
+  }
+
+  const indexCarte = Math.floor(Math.random() * joueur.length);
+  const carte = joueur.splice(indexCarte, 1)[0];
+
+  const joueurDiv = document.querySelectorAll('.joueur')[joueurIndex];
+  const joueurCardsDiv = joueurDiv.querySelector('.joueur-cards');
+
+  const carteImg = joueurCardsDiv.querySelector(`img[title="${carte.valeur}-de-${carte.couleur}"]`);
+  joueurCardsDiv.removeChild(carteImg);
+
+  const joueurXDiv = document.querySelector(`.Joueur${joueurIndex + 1}`);
+  const carteJoueurX = document.createElement('img');
+  carteJoueurX.src = `../assets/${carte.valeur}-de-${carte.couleur}.avif`;
+  carteJoueurX.alt = `${carte.valeur}-de-${carte.couleur}`;
+  carteJoueurX.title = `${carte.valeur}-de-${carte.couleur}`;
+  joueurXDiv.insertBefore(carteJoueurX, joueurXDiv.firstChild);
+}
 
 async function main() {
     await afficherTotalCarte()
@@ -125,31 +149,30 @@ async function main() {
   for (let i = 0; i < joueursLabels.length; i++) {
     const labelDiv = document.createElement('div');
     labelDiv.classList.add(positions[i]);
+    labelDiv.classList.add(`Joueur${i +1}`);
 
-    if (i === 0 || i === 3) { 
-      const labelText = document.createElement('span');
-      labelText.textContent = joueursLabels[i];
-      labelDiv.appendChild(labelText);
-
-      const labelImg = document.createElement('img');
-    labelImg.src = '../assets/back.avif';
-    labelImg.alt = 'Back Image';
-    labelDiv.appendChild(labelImg);
-     } else {
+    
       const labelImg = document.createElement('img');
       labelImg.src = '../assets/back.avif';
       labelImg.alt = 'Back Image';
+      labelImg.title = `${joueurs[i].length} ${joueurs[i].lenght === 1 ? 'Carte' : 'Cartes'}`;
       labelDiv.appendChild(labelImg);
   
       const labelText = document.createElement('span');
       labelText.textContent = joueursLabels[i];
       labelDiv.appendChild(labelText);
-     }
+     
 
     joueurLabelsDiv.appendChild(labelDiv);
+    document.body.appendChild(joueurLabelsDiv);
   }
+  await new Promise((resolve) => setTimeout(resolve, 1000))
+  await tirerCarteAleatoire(0)
+  await tirerCarteAleatoire(1)
+  await tirerCarteAleatoire(2)
+  await tirerCarteAleatoire(3)
 
-  document.body.appendChild(joueurLabelsDiv);
+
   }
 
   await main()
