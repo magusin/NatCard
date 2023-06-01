@@ -2,4 +2,74 @@ img {
     width: auto;
     height: 10vh;
     margin: 0 auto;
-}
+  }
+  
+  .joueurs-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-gap: 20px;
+    justify-items: center;
+  }
+  
+  .joueur {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .joueur-heading {
+    margin: 0;
+    text-align: center;
+  }
+  
+  .joueur-labels {
+    position: relative;
+    width: 100%;
+    height: 300px;
+  }
+  
+  .joueur-labels div {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    height: 50%;
+  }
+  
+  .joueur-labels div img {
+    width: 20px;
+    height: auto;
+    margin-right: 5px;
+  }
+  
+  .joueur-labels div:nth-child(1) {
+    top: 0;
+    left: 0;
+  }
+  
+  .joueur-labels div:nth-child(2) {
+    top: 0;
+    right: 0;
+  }
+  
+  .joueur-labels div:nth-child(3) {
+    bottom: 0;
+    right: 0;
+  }
+  
+  .joueur-labels div:nth-child(4) {
+    bottom: 0;
+    left: 0;
+  }
+
+  .joueur-content {
+    display: flex;
+    
+    align-items: center;
+  }
+  
+  .joueur-cards {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
